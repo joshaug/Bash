@@ -1,0 +1,53 @@
+#! /bin/bash
+# this is a shell script
+printf "\n\t\e[4m\e[1mOperating Systems EE5012.\n"
+printf "\tLab Assignment 2\n"
+printf "\n"
+printf "\tJames O'Shaughnessy\n"
+printf "\t15187497\e[0m\n\n"
+
+printf "\n\t\t\e[4m\e[45mFILES\e[0m\n" 
+
+#Number of files in the home directory
+printf "%-25s %s" "Number of files: "; find ~ -type f | wc -l  ;  printf "\n" 
+
+#Number of Directory files in the home Directory
+printf "%-25s %s" "Number of Dir files: "; find ~ -type d | wc -l  ;  printf " \n" 
+
+
+printf "\n\t\t\e[4m\e[43mPARTITION\e[0m\n" 
+
+# df command displays information about space usage on the file system.
+# awk isused to select the correct column, 'NR!=1' cuts the first row.
+printf "%-25s %s" "Free Blocks: "; ls -l ~ | df . | awk 'NR!=1{print$4}' ; printf "\n"
+printf "%-25s %s" "% of used space: "; ls -l ~ | df . | awk 'NR!=1{print$5}' ; printf "\n"
+
+
+printf "\n\t\t\e[4m\e[42mUSER\e[0m\n" 
+
+# User information is accessed with the environment variables.
+printf "%-25s %s" "User Name: " $USER ; printf "\n\n"
+printf "%-25s %s" "User ID: " $EUID ; printf "\n\n"
+printf "%-25s %s"  "Host Name: " $HOSTNAME ; printf "\n\n"
+printf "%-25s %s" "Machine Type: " $MACHINETYPE ; printf "\n\n"
+
+
+printf "\n\t\t\e[4m\e[41mCPU\e[0m\n" 
+
+# CPU information is found in the proc directory.
+# grep is manipulated using the cut commands, and then formatted.
+printf "%-25s %s" "Model Name:" ; grep "^model name" /proc/cpuinfo | sort -u | cut -d ':' -f 2 | cut -c 2-50 ; printf "\n"
+printf "%-25s %s" "CPU Speed:" ; grep "^cpu MHz" /proc/cpuinfo | sort -u | cut -d ':' -f 2 | cut -c 2-50 ; printf "\n"
+printf "%-25s %s" "CPU Cache Size:" ; grep "^cache size" /proc/cpuinfo | sort -u | cut -d ':' -f 2 | cut -c 2-50 ; printf "\n"
+printf "%-25s %s" "CPU Vendor ID" ; grep "^vendor" /proc/cpuinfo | sort -u | cut -d ':' -f 2 | cut -c 2-50 ; printf "\n"
+printf "%-25s %s" "CPU Cores:" ; grep "^cpu cores" /proc/cpuinfo | sort -u | cut -d ':' -f 2 | cut -c 2-50 ; printf "\n"
+
+
+printf "\n\t\t\e[4m\e[42mMEMORY\e[0m\n" 
+
+# CPU information is found in the proc directory.
+# grep is manipulated using the cut and awk commands, and then formatted .
+printf "%-25s %s" "Total Memory:" ; grep "^MemTotal" /proc/meminfo | sort -u | cut -d ':' -f 2 | awk '{print $1,$2}' ; printf "\n"
+printf "%-25s %s" "Free Memory:" ; grep "^MemFree" /proc/meminfo | sort -u | cut -d ':' -f 2 | awk '{print $1,$2}' ; printf "\n"
+printf "%-25s %s" "Available Memory:" ; grep "^MemAvail" /proc/meminfo | sort -u | cut -d ':' -f 2 | awk '{print $1,$2}' ; printf "\n"
+
