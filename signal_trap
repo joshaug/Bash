@@ -1,0 +1,34 @@
+#! /bin/bash
+# this is a shell script for the Signal trap 
+printf "\n\t\e[4m\e[1mOperating Systems EE5012.\n"
+printf "\tLab Assignment 3 Ex 3\n"
+printf "\n"
+printf "\tJames O'Shaughnessy\n"
+printf "\t15187497\e[0m\n\n"
+
+#Interupt from keyboard (CTRL+C)
+trap 'trap_function' SIGINT
+
+#Function, displays cpu utilisation information, kills the busy_wait process
+trap_function()
+{
+	cpu_Util=$(ls -l ~ | ps au | sort -nk3 | tail -1 | awk '{print$3}')
+	echo
+	echo "CPU utilisation for busy_wait is" $cpu_Util
+	kill -HUP "$!"
+	wait
+	exit
+}
+
+
+#Run busy_wait in the background, loops a simple message until interrupted
+./busy_wait &
+while true
+do
+	echo "I'm Looping" $usage
+	sleep 1
+done
+wait
+exit
+
+

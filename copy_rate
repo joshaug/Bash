@@ -1,0 +1,56 @@
+#! /bin/bash
+# this is a shell script
+printf "\n\t\e[4m\e[1mOperating Systems EE5012.\n"
+printf "\tLab Assignment 5\n"
+printf "\n"
+printf "\tJames O'Shaughnessy\n"
+printf "\t15187497\e[0m\n\n"
+
+#File array with given names
+file_array=( "myFile_1" "myFile_2" "myFile_3" "myFile_4" "myFile_5" )
+
+#Create 5 files of various sizes from 10 KB to 50 MB
+dd if=/dev/zero of=myFile_1 bs=1k count=10 status=none
+dd if=/dev/zero of=myFile_2 bs=1k count=500 status=none
+dd if=/dev/zero of=myFile_3 bs=1024k count=1 status=none
+dd if=/dev/zero of=myFile_4 bs=1024k count=10 status=none
+dd if=/dev/zero of=myFile_5 bs=1024k count=50 status=none
+
+#Function to measure and display the transfer rate of file transfers
+copy_function () 
+{
+	
+	#Record time before and after a file copy/tranfer
+	t1=$(( $(date +%s%N) ))
+	cp $1 temp
+	t2=$(( $(date +%s%N) ))
+	
+	#Display the file name
+	printf "\n\t\t\e[4m\e[41m$1\e[0m\n" 
+
+	#Calculate the fie size in Kilobytes using the wc command
+	size=$(($(wc -c < $1)/1000))
+	printf "%-15s %s" "Size: " "$size Kb" ; printf "\n"
+	
+	#Calculate the elapsed time during the file copying and display the result
+	time_dif=$((t2 - t1))
+	time_dif2=$( bc <<< "scale=3; $time_dif/1000000")
+	printf "%-15s %s" "Copy time: " "$time_dif2 ms" ; printf "\n"
+
+
+	#Calculate add display the transfer rate at Kb/S
+	transfer_rate=$( bc <<< "scale=3; ($size*1000)/$time_dif2 " )
+	printf "%-15s %s" "Transfer Rate: " "$transfer_rate Kb/S" ; printf "\n"
+	
+
+
+}
+
+
+
+# Call the function with a filename as an argument
+for(( x=0; x<5 ;x++)) ; do
+	copy_function ${file_array[x]}
+	sleep 1
+	done
+exit

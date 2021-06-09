@@ -1,0 +1,52 @@
+#! /bin/bash
+
+#create a pipe
+if [ ! -p pipe1 ] ; then
+	mkfifo pipe1
+#else echo "pipe 1 already exists"
+fi
+#create a pipe 2
+if [ ! -p pipe2 ]; then
+	mkfifo pipe2
+#else echo "pipe 2 already exists"
+fi
+
+echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+echo "$0 is starting"
+echo "PID of $0 is: $$"
+echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+
+echo "$0: Attemping to send a message through pipe1!"
+echo "$0: Please be patient!"
+echo
+#Send messages through pipe1
+for (( x=0 ; x<5 ; x++ )); do
+echo "Hello from $0" > pipe1
+sleep 1
+done
+
+echo "Last message!" > pipe1
+sleep 1
+
+
+#Wait for a message from pipe2
+echo "$0: Waiting to receive a message through pipe2!"
+sleep 1
+echo
+echo "-----------------------------------------------------"
+read input < pipe2
+echo "pipe2 recieved message: $input"
+echo "-----------------------------------------------------"
+echo
+
+sleep 1
+
+#Send a HUP signal to process 2
+echo "$0: Sending HUP signal to $input!"
+kill -HUP $input
+echo
+
+
+echo "$0: Removing pipe1 and exiting now!"
+rm pipe1
+exit 0

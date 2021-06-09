@@ -1,0 +1,67 @@
+#! /bin/bash
+#create a pipe
+if [ ! -p pipe1 ]; then
+	mkfifo pipe1
+#else echo "pipe 1 already exists"
+fi
+#create a pipe 2
+if [ ! -p pipe2 ]; then
+	mkfifo pipe2
+#else echo "pipe 2 already exists"
+fi
+# Variable to loop process until interrupted
+sigtrap=0
+
+
+trap 'trap_func' SIGHUP
+
+#Trap Function to decrese priority and break Proc_B loop
+trap_func()
+{
+	sigtrap=1
+	echo "#############################################"
+	#echo "This is a trap!!"
+	echo "Trap routine initiated!"
+	echo "Signal caught! ! !"
+	echo
+	echo "$0: Increasing my niceness with 5!"
+ 	renice -n 5 -p $$
+	#echo "$$ (process ID)"
+	echo "$0 here, PID $$! I am about to remove pipe2!"
+	rm pipe2
+	echo "Trap routine finished!"
+
+	
+}
+echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+echo "$0 is starting"
+echo "PID of $0 is: $$"
+echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+
+# while loop reading pipe1
+while [ "$input" != "Last message!" ]
+
+do
+read input < pipe1
+echo $input
+sleep 1
+done
+
+
+# send process PID to pipe2
+echo $$ > pipe2
+
+#while loop runs until HUP Signal recieved
+while [ "$sigtrap" == 0 ]
+
+do
+echo
+echo "Proc_B is looping every second!"
+echo
+sleep 1
+done
+
+echo "$0: Exiting now..."
+echo "#############################################"
+
+exit 0

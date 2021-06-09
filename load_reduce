@@ -1,0 +1,27 @@
+#! /bin/bash
+# this is a shell script for the load reduce shell
+printf "\n\t\e[4m\e[1mOperating Systems EE5012.\n"
+printf "\tLab Assignment 3 Ex 2\n"
+printf "\n"
+printf "\tJames O'Shaughnessy\n"
+printf "\t15187497\e[0m\n\n"
+
+
+# change permissions, run the busy_wait script in the background with a delay.
+chmod a+x busy_wait
+./busy_wait &
+sleep 1
+
+#Find the pid Value of the busiest process
+pid_Value=$(ls -l ~ | ps au | sort -nk3 | tail -1 | awk '{print$2}')
+
+#Find the Name of the busiest process
+process_Name=$(ls -l ~ | ps au | sort -nk3 | tail -1 | awk '{print$11,$12}')
+
+#Kill the busiest process
+kill $pid_Value
+
+#Display the process Killed
+echo "The busiest process was: "$process_Name
+
+

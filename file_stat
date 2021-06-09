@@ -1,0 +1,23 @@
+#! /bin/bash
+# this is a shell script
+printf "\n\t\e[4m\e[1mOperating Systems EE5012.\n"
+printf "\tLab Assignment 3 Ex 1\n"
+printf "\n"
+printf "\tJames O'Shaughnessy\n"
+printf "\t15187497\e[0m\n\n"
+
+
+
+# df command displays information about space usage on the file system.
+# awk isused to select the correct column, 'NR!=1' cuts the first row.
+freeBlocks=$( ls -l ~ | df . | awk 'NR!=1{print$4}' )
+usedSpace=$( ls -l ~ | df . | awk 'NR!=1{print$5}' )  
+printf "%-25s %s" "Free Blocks: "; ls -l ~ | df . | awk 'NR!=1{print$4}' ; printf "\n"
+printf "%-25s %s" "% of used space: "; ls -l ~ | df . | awk 'NR!=1{print$5}' ; printf "\n"
+
+#Check the size of the free blocks, under 5000000, alert the user.
+if((freeBlocks<5000000));then
+echo "Disk space is running low, "$usedSpace" is used."
+else echo "Sufficient disk space availible"
+fi
+
